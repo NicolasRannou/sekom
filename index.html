@@ -1,0 +1,120 @@
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>seKom</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+  </head>
+  <body>
+
+    <div class="container">
+    
+    <div class="row">
+        <h3>Unknown Sequence</h3>
+        <textarea id='unknown' style="width:100%; height:100px"></textarea>
+    </div>   
+    
+   <div class="row">
+        <h3>Reference Sequences</h3>
+        <div class="references">
+            <textarea style="width:100%; height:100px"></textarea>
+        </div>
+        <button id="add" type="button" class="btn btn-default">
+            Add Reference
+        </button>
+        <button id="compare" type="button" class="btn btn-primary">
+            Compare Sequences
+        </button>
+    </div>   
+
+   <div class="row">
+       <h3>Results</h3>
+       <div>(in GREEN the letters from the unknown sequence which are unique against the references)</div>
+       <div id="results"></div>
+   </div>
+ 
+    </div>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+
+    // connect callbacks
+    $( document ).ready(function() {
+        $( "body" ).on( "click", "#add", function() {
+            $('.references').append('<textarea style="width:100%; height:100px"></textarea>');
+        });
+        
+        $( "body" ).on( "click", "#compare", function() {
+            var unknownSeq = $("#unknown").val().split("");
+            window.console.log(unknownSeq);
+
+            var knownSeq = [];
+            $(".references textarea").each(function(index){
+                knownSeq.push($( this ).val().split(""));
+            });
+
+            window.console.log(knownSeq);
+ 
+            var result = [];
+            var resultDetails = [];
+
+            for (var i=0; i < unknownSeq.length; i++) {
+                var unique = true;
+                resultDetails.push([]);
+
+                for(var j=0; j < knownSeq.length; j++){
+                    if(typeof(knownSeq[j][i]) != 'undefined'){
+                        if(knownSeq[j][i] != unknownSeq[i]){
+                            resultDetails[i].push(1);
+                        }
+                        else{
+                            unique = false;
+                            resultDetails[i].push(0);
+                        }                        
+                    }
+                    else{
+                        resultDetails[i].push(1);
+                    }
+                }
+                
+                if(unique){
+                  result.push(1);
+                }
+                else{
+                  result.push(0);
+                }
+            } 
+
+            window.console.log(result);
+            window.console.log(resultDetails);
+            
+            var position = '';
+            $('#results').html('');
+            for(var k=0; k < result.length; k++){
+                var bgColor = "#FFF";
+                if(result[k] == 1){
+                  var relPos = k+1;
+                  position += "("+relPos+","+unknownSeq[k]+"), ";
+                  bgColor = "#99FF66";
+                }
+                
+                $('#results').append('<span className="folder-name" style="background-color:' + bgColor + '">' + unknownSeq[k] + '</span>');
+            }
+
+        });
+    });
+    
+    </script>
+
+  </body>
+</html>
+
